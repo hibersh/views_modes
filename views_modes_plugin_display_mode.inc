@@ -13,7 +13,10 @@ class views_modes_plugin_display_mode extends views_plugin_display {
     $options = parent::option_definition();
     $options['displays'] = array('default' => array());
     $options['mode_id'] = array('default' => '');
-    $options['mode_name'] = array('default' => '', 'translatable' => TRUE);
+    $options['mode_name'] = array(
+      'default' => '',
+      'translatable' => TRUE,
+    );
     return $options;
   }
 
@@ -65,7 +68,7 @@ class views_modes_plugin_display_mode extends views_plugin_display {
           '#required' => TRUE,
           '#type' => 'textfield',
           '#default_value' => $this->get_option('mode_id'),
-          '#description' => t('This ID will be used as the CSS class for display mode links.')
+          '#description' => t('This ID will be used as the CSS class for display mode links.'),
         );
         break;
       case 'mode_name':
@@ -112,5 +115,7 @@ class views_modes_plugin_display_mode extends views_plugin_display {
   /**
    * Attach to another view.
    */
-  function attach_to($display_id) { return; }
+  function attach_to($display_id) {
+    return;
+  }
 }

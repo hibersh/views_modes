@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implementation of hook_views_api().
+ * Implements hook_views_api().
  */
 function views_modes_views_api() {
   return array('api' => 2);
@@ -32,7 +32,10 @@ function views_modes_get_links($icons = TRUE) {
           'title' => $icons ? "<span class='icon'></span>{$title}" : $title,
           'href' => $view->get_url(),
           'html' => $icons,
-          'purl' => array('add' => array(array('provider' => 'views_modes', 'id' => $mode_id))),
+          'purl' => array('add' => array(array(
+                'provider' => 'views_modes',
+                'id' => $mode_id,
+              ))),
           'query' => drupal_query_string_encode($_GET, array('q', 'page')),
           'attributes' => array(
             'class' => $active_display === $display ? 'views-modes-active' : '',
@@ -51,16 +54,19 @@ function views_modes_get_links($icons = TRUE) {
       // Provide a 'reset' mode link.
       $query['views_mode'] = 'default';
       $links = array('default' => array(
-        'title' => $icons ? "<span class='icon'></span>". t($title) : t($title),
-        'href' => $view->get_url(),
-        'html' => $icons,
-        'purl' => array('add' => array(array('provider' => 'views_modes', 'id' => 'default'))),
-        'query' => drupal_query_string_encode($_GET, array('q', 'page')),
-        'attributes' => array(
-          'class' => $active_mode === 'default' ? 'views-modes-active' : '',
-          'title' => $title,
-        ),
-      )) + $links;
+          'title' => $icons ? "<span class='icon'></span>" . t($title) : t($title),
+          'href' => $view->get_url(),
+          'html' => $icons,
+          'purl' => array('add' => array(array(
+                'provider' => 'views_modes',
+                'id' => 'default',
+              ))),
+          'query' => drupal_query_string_encode($_GET, array('q', 'page')),
+          'attributes' => array(
+            'class' => $active_mode === 'default' ? 'views-modes-active' : '',
+            'title' => $title,
+          ),
+        )) + $links;
     }
   }
 
@@ -68,24 +74,30 @@ function views_modes_get_links($icons = TRUE) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implements hook_block_info().
  */
-function views_modes_block($op = 'list', $delta = 0) {
-  switch ($op) {
-    case 'list':
-      $blocks = array();
-      $blocks['modes']['info'] = t('Views mode links');
-      return $blocks;
-    case 'view':
-      if ($delta == 'modes' && $links = views_modes_get_links()) {
-        return array('content' => theme('links', $links));
-      }
-      break;
+function views_modes_block_info() {
+  $blocks = array();
+  $blocks['modes']['info'] = t('Views mode links');
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function views_modes_block_view($delta) {
+  if ($delta == 'modes' && $links = views_modes_get_links()) {
+    return array('content' => theme('links', array('links' => $links)));
   }
 }
 
 /**
- * Implementation of hook_ctools_plugin_api().
+ * Implements hook_block().
+ */
+function views_modes_block_OLD($op = 'list', $delta = 0) { }
+
+/**
+ * Implements hook_ctools_plugin_api().
  */
 function views_modes_ctools_plugin_api($module, $api) {
   if ($module == 'context' && $api == 'plugins') {
@@ -94,7 +106,7 @@ function views_modes_ctools_plugin_api($module, $api) {
 }
 
 /**
- * Implementation of hook_context_plugins().
+ * Implements hook_context_plugins().
  */
 function views_modes_context_plugins() {
   $plugins = array();
@@ -110,7 +122,7 @@ function views_modes_context_plugins() {
 }
 
 /**
- * Implementation of hook_context_registry().
+ * Implements hook_context_registry().
  */
 function views_modes_context_registry() {
   return array(
@@ -124,7 +136,7 @@ function views_modes_context_registry() {
 }
 
 /**
- * Implementation of hook_views_plugins().
+ * Implements hook_views_plugins().
  */
 function views_modes_views_plugins() {
   return array(
@@ -143,7 +155,7 @@ function views_modes_views_plugins() {
 }
 
 /**
- * Implementation of hook_views_pre_build().
+ * Implements hook_views_pre_build().
  */
 function views_modes_views_pre_build(&$view) {
   $display = views_modes_get_active_mode_display($view);
@@ -228,7 +240,7 @@ function _views_modes_has_modes($view) {
 /**
  * PURL module integration
  *
- * Implementation of hook_purl_provider()
+ * Implements hook_purl_provider().
  */
 function views_modes_purl_provider() {
   return array(
@@ -237,7 +249,7 @@ function views_modes_purl_provider() {
       'description' => t('Set the mode to be use in with enabled views.'),
       'callback' => 'views_modes_purl',
       'example' => '?views-mode=list',
-    )
+    ),
   );
 }
 
