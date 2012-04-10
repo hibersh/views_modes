@@ -93,7 +93,6 @@ function views_modes_block_info() {
  */
 function views_modes_block_view($delta) {
   if ($delta == 'modes' && $links = views_modes_get_links()) {
-    return array('content' => theme('links', array('links' => $links)));
     $return = array(
     'subject' => "Views Modes",
     'content' => theme('links', array(
@@ -168,6 +167,7 @@ function views_modes_views_plugins() {
         'theme' => 'views_view',
         'use ajax' => TRUE,
         'use pager' => TRUE,
+        'accept attachments' => TRUE,
       ),
     ),
   );
