@@ -217,6 +217,21 @@ function views_modes_views_pre_build(&$view) {
 }
 
 /**
+ * Implements hook_views_post_build().
+ */
+function views_modes_views_post_build(&$view) {
+  if($mode_display = views_modes_get_active_mode_display($view)) {
+    unset($view->attachment_before);
+    unset($view->attachment_after);
+    foreach ($view->display as $id => $display) {
+      if (!empty($view->display[$id]->handler)) {
+        $view->display[$id]->handler->attach_to($mode_display->id);
+      }
+    }
+  }
+}
+
+/**
  * Get the active mode ID.
  */
 function views_modes_get_active_mode($mode = '') {
